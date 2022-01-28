@@ -4,7 +4,7 @@
   "description": "1. Build restful api: CRUD Books. You can use any frameworks to build (Language Nodejs)\r 2. API Search having filter for Books\r 3. Document API in postman(Description for each param)\r 4. Using data/books to build book model\r 5. Write dockerfile if can (Bonus).",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon index.ts",
+    "start:dev": "nodemon index.ts --ignore data/",
     "build": "tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
