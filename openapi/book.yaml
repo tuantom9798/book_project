@@ -207,7 +207,7 @@ components:
     Book:
       allOf:
         - $ref: '#/components/schemas/BookId'
-        - $ref: '#/components/schemas/Book'
+        - $ref: '#/components/schemas/PostBook'
     Error:
       type: object
       required:

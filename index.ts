@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 app.post('/books', async (req, res) => {
   const book = req.body as Book;
+  book.Id = Math.random().toString(16).slice(2);
 
   try {
     const created = await createBook(book);
