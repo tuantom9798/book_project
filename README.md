@@ -6,8 +6,8 @@
 4. Using data/books to build book model
 5. Write dockerfile if can (Bonus).
 
+## Scripts (yarn | npm run)
 
-
-
-
-
+- `start:dev` - run dev server on [http://localhost:3000](http://localhost:3000)
+- `build` - build source (transpile ts)
+- `start` - run production server (requires `npm run build`)
