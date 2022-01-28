@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import JSONStream from 'JSONStream';
 import es from 'event-stream';
 import { Book } from './models';

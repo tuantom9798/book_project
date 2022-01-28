@@ -1,0 +1,15 @@
+version: '3'
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+  swagger-ui:
+      image: swaggerapi/swagger-ui
+      container_name: "book-api-swagger-ui"
+      ports:
+        - "8080:8080"
+      volumes:
+        - "./openapi/book.yaml:/book.yaml"
+      environment:
+        SWAGGER_JSON: /book.yaml
