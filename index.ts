@@ -1,17 +1,6 @@
 import express from 'express';
-import JSONStream from 'JSONStream';
-import es from 'event-stream';
-import fs from 'fs';
-import { promisify } from 'util';
 import { formatError, formatJsonResponse } from './utils';
-import {
-  createBook,
-  deleteBook,
-  getBookFiles,
-  getBookReadStreams,
-  getBooks,
-  updateBook,
-} from './file';
+import { createBook, deleteBook, getBook, getBooks, updateBook } from './file';
 import { Book } from './models';
 
 const app = express();
@@ -47,6 +36,20 @@ app.get('/books', async (req, res) => {
   }
 });
 
+app.get('/books/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const book = await getBook(id);
+    if (book) {
+      return res.json(formatJsonResponse(book));
+    }
+    return res.status(404).json(formatError(new Error('BOOK_NOT_FOUND')));
+  } catch (error) {
+    return res.status(500).json(formatError(error));
+  }
+});
+
 app.put('/books', async (req, res) => {
   const updatedBook: Book = req.body;
 
@@ -54,7 +57,7 @@ app.put('/books', async (req, res) => {
   if (updated) {
     return res.json(formatJsonResponse(updatedBook.Id));
   }
-  res.status(404).json(formatError(new Error('Book not found')));
+  res.status(404).json(formatError(new Error('BOOK_NOT_FOUND')));
 });
 
 app.delete('/books/:id', async (req, res) => {
@@ -66,7 +69,7 @@ app.delete('/books/:id', async (req, res) => {
     if (deleted) {
       return res.json(formatJsonResponse(id));
     }
-    return res.status(404).json(formatError(new Error('Book not found')));
+    return res.status(404).json(formatError(new Error('BOOK_NOT_FOUND')));
   } catch (error) {
     return res.status(500).json(formatError(error));
   }

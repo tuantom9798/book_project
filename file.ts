@@ -189,3 +189,29 @@ export async function getBooks(query: string, total: number): Promise<Book[]> {
     return Promise.reject(error);
   }
 }
+
+export async function getBook(id: string): Promise<Book | null> {
+  const files = await getBookFiles();
+
+  return new Promise<Book | null>((resolve, reject) => {
+    let book: Book | null = null;
+    const filterEvt = es
+      .filterSync(function (data: any) {
+        if (data.Id === id) {
+          book = data;
+          filterEvt.end();
+        }
+        return true;
+      })
+      .once('end', () => {
+        resolve(book);
+      })
+      .once('error', (err) => {
+        reject(err);
+      });
+    for (const file of files) {
+      const readStream = fs.createReadStream(file, { encoding: 'utf8' });
+      readStream.pipe(JSONStream.parse('*')).pipe(filterEvt);
+    }
+  });
+}
