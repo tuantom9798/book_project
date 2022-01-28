@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import { formatError, formatJsonResponse } from './utils';
 import {
   createBook,
+  deleteBook,
   getBookFiles,
   getBookReadStreams,
   getBooks,
@@ -56,7 +57,20 @@ app.put('/books', async (req, res) => {
   res.status(404).json(formatError(new Error('Book not found')));
 });
 
-app.delete('/books', async (req, res) => {});
+app.delete('/books/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deleted = await deleteBook(id);
+
+    if (deleted) {
+      return res.json(formatJsonResponse(id));
+    }
+    return res.status(404).json(formatError(new Error('Book not found')));
+  } catch (error) {
+    return res.status(500).json(formatError(error));
+  }
+});
 
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);

@@ -113,6 +113,46 @@ export async function updateBook(updatedBook: Book): Promise<boolean> {
   return updated;
 }
 
+export async function deleteBook(id: string): Promise<boolean> {
+  const files = await getBookFiles();
+  let deleted = false;
+  for (const file of files) {
+    const promise = new Promise<boolean>(async (resolve, reject) => {
+      const readStream = fs.createReadStream(file, { encoding: 'utf8' });
+      const { writeStream } = await rw(file);
+      const mapEvt = es
+        .mapSync(function (data: any) {
+          if (data.Id === id) {
+            deleted = true;
+            return {};
+          }
+          return data;
+        })
+        .once('end', () => {
+          resolve(true);
+        })
+        .once('error', (err) => {
+          reject(err);
+        });
+      readStream
+        .pipe(JSONStream.parse('*'))
+        .pipe(mapEvt)
+        .pipe(JSONStream.stringify())
+        .pipe(writeStream);
+    });
+
+    try {
+      await promise;
+      if (deleted) {
+        return true;
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+  return deleted;
+}
+
 export async function getBooks(query: string, total: number): Promise<Book[]> {
   const streams = await getBookReadStreams();
   const books: Book[] = [];
