@@ -1,0 +1,38 @@
+{
+  "name": "book_project",
+  "version": "1.0.0",
+  "description": "1. Build restful api: CRUD Books. You can use any frameworks to build (Language Nodejs)\r 2. API Search having filter for Books\r 3. Document API in postman(Description for each param)\r 4. Using data/books to build book model\r 5. Write dockerfile if can (Bonus).",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon index.ts --ignore data/",
+    "start": "node dist/index.js",
+    "build": "tsc --project ./ && mv data ./dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuantom9798/book_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tuantom9798/book_project/issues"
+  },
+  "homepage": "https://github.com/tuantom9798/book_project#readme",
+  "dependencies": {
+    "JSONStream": "^1.3.5",
+    "event-stream": "^4.0.1",
+    "express": "^4.17.2",
+    "rw-stream": "^0.3.3"
+  },
+  "devDependencies": {
+    "@types/event-stream": "^4.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jsonstream": "^0.8.30",
+    "@types/node": "^17.0.12",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  }
+}
