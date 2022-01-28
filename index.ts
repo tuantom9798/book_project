@@ -24,6 +24,7 @@ app.post('/books', async (req, res) => {
 });
 
 app.get('/books', async (req, res) => {
+  // book name or author name
   const name = `${req.query.name}`.toLowerCase();
   const total = Number(req.query.total || 10);
 
