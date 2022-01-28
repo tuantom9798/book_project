@@ -33,6 +33,46 @@ export async function getBookWriteStreams() {
   });
 }
 
+export function createBook(book: Book) {
+  const fileName = 'books400k-500k.json';
+  const filePath = path.join(booksDir, fileName);
+
+  return new Promise((resolve, reject) => {
+    try {
+      const writeStream = fs.createWriteStream(filePath, {
+        flags: 'r+',
+        start: fs.statSync(filePath).size - 2,
+      });
+      writeStream.write(
+        JSON.stringify(book, null, 2).replace(/\{/, ',{').replace(/\}$/, '}]') +
+          '\n',
+        (streamError) => {
+          return reject(streamError);
+        }
+      );
+      return resolve(true);
+    } catch (error: any) {
+      // file not found
+      if (error?.code === 'ENOENT') {
+        fs.writeFileSync(
+          filePath,
+          JSON.stringify(Array.from({ ...[book], length: 1 }), null, 2)
+        );
+        return resolve(true);
+      }
+      // out of bound to file size range
+      if (error instanceof RangeError) {
+        const writeStream = fs.createWriteStream(filePath, { flags: 'r+' });
+        writeStream.write(JSON.stringify(book, null, 2), (streamError) => {
+          return reject(streamError);
+        });
+        return resolve(true);
+      }
+      return reject(error);
+    }
+  });
+}
+
 export async function updateBook(updatedBook: Book): Promise<boolean> {
   const files = await getBookFiles();
   let updated = false;
