@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'book-api'
+servers:
+  - url: 'localhost:3000'
+paths:
+  /books:
+    post:
+      tags:
+        - book
+      summary: create a new book
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostBook'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: integer
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - book
+      summary: update a book
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: integer
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - book
+      summary: search a list of book by book name or author name
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'List of books'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  total:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/books/{id}':
+    get:
+      tags:
+        - book
+      summary: get a book by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: book's id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'return a book'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  total:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Book'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - book
+      summary: delete a book by its id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: book's id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    BookId:
+      type: object
+      properties:
+        Id:
+          type: string
+    PostBook:
+      type: object
+      properties:
+        Name:
+          type: string
+        RatingDist1:
+          type: string
+        pagesNumber:
+          type: integer
+          format: int32
+        RatingDist4:
+          type: string
+        RatingDistTotal:
+          type: string
+        PublishMonth:
+          type: integer
+          format: int32
+        PublishDay:
+          type: integer
+          format: int32
+        Publisher:
+          type: string
+        CountsOfReview:
+          type: integer
+          format: int32
+        PublishYear:
+          type: integer
+          format: int32
+        Language:
+          type: string
+        Authors:
+          type: string
+        Rating:
+          type: number
+          format: float
+        RatingDist2:
+          type: string
+        RatingDist5:
+          type: string
+        ISBN?:
+          type: object
+        RatingDist3:
+          type: string
+    Book:
+      allOf:
+        - $ref: '#/components/schemas/BookId'
+        - $ref: '#/components/schemas/Book'
+    Error:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
